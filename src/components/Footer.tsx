@@ -49,6 +49,11 @@ export function Footer() {
                   Como compramos
                 </Link>
               </li>
+              <li>
+                <Link href="/creditos" className="transition hover:text-white">
+                  Créditos das fotos
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -56,7 +61,7 @@ export function Footer() {
         <div className="ticks mt-14 h-3 text-fumaca" aria-hidden />
 
         <p className="mt-6 text-xs text-cromo/45">
-          Protótipo em desenvolvimento — veículos, preços e contatos são fictícios.
+          Protótipo em desenvolvimento — veículos, preços e contatos são fictícios. As fotos mostram o modelo anunciado e têm crédito em /creditos.
         </p>
       </div>
     </footer>

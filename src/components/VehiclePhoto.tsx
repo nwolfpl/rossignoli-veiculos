@@ -137,20 +137,6 @@ export function VehiclePhoto({
   variant = "studio",
   className,
 }: Props) {
-  // Assim que o anúncio tiver fotos reais, elas substituem a ilustração.
-  const photo = vehicle.photos?.[PHOTO_VIEWS.indexOf(view)] ?? vehicle.photos?.[0];
-  if (photo) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={photo}
-        alt={`${vehicle.brand} ${vehicle.model} ${vehicle.version} — ${VIEW_LABELS[view].toLowerCase()}`}
-        className={`object-cover ${className ?? ""}`}
-        loading="lazy"
-      />
-    );
-  }
-
   const uid = `p${vehicle.id}${view}${variant}`;
   const body = vehicle.colorHex;
   const onStage = variant === "stage";
@@ -316,5 +302,53 @@ export function BodyIcon({
       <circle cx={WHEELS[body][0]} cy={214} r={26} fill="currentColor" />
       <circle cx={WHEELS[body][1]} cy={214} r={26} fill="currentColor" />
     </svg>
+  );
+}
+
+/** Quantas imagens o anúncio tem: fotos reais quando existirem, senão os ângulos ilustrados. */
+export const slideCount = (vehicle: Vehicle) =>
+  vehicle.photos?.length || PHOTO_VIEWS.length;
+
+type MediaProps = {
+  vehicle: Vehicle;
+  index?: number;
+  variant?: PhotoVariant;
+  className?: string;
+  priority?: boolean;
+};
+
+/**
+ * Imagem do anúncio. Usa a foto real quando ela existe e cai na ilustração
+ * vetorial quando o anúncio ainda não tem fotos.
+ */
+export function VehicleMedia({
+  vehicle,
+  index = 0,
+  variant = "studio",
+  className,
+  priority = false,
+}: MediaProps) {
+  const photo = vehicle.photos?.[index];
+
+  if (photo) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={photo}
+        alt={`${vehicle.brand} ${vehicle.model} ${vehicle.version} ${vehicle.modelYear}`}
+        className={`object-cover ${className ?? ""}`}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+      />
+    );
+  }
+
+  return (
+    <VehiclePhoto
+      vehicle={vehicle}
+      view={PHOTO_VIEWS[index % PHOTO_VIEWS.length]}
+      variant={variant}
+      className={className}
+    />
   );
 }

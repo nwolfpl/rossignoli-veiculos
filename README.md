@@ -55,18 +55,30 @@ claras (catálogo, função).
 
 ## Fotos dos veículos
 
-O protótipo desenha cada carro em SVG (lataria com gradiente, vidros, rodas com raios,
-sombra de contato e reflexo) a partir da carroceria e da cor. É um recurso temporário
-para não usar imagem de terceiros — **fotos reais do estoque terão impacto muito maior**.
+Os anúncios usam **fotos reais dos modelos**, vindas do
+[Wikimedia Commons](https://commons.wikimedia.org) sob licença livre (CC BY / CC BY-SA /
+CC0). O crédito ao autor é obrigatório e aparece em dois lugares: embaixo da galeria do
+anúncio e na página `/creditos`.
 
-Para usar fotos reais, basta preencher `photos` no veículo:
+Regras que guiaram a curadoria:
+
+- todas as fotos de um anúncio são **do mesmo exemplar** — nada de misturar cores;
+- a geração e o ano do carro nas fotos definem o ano, a cor e a versão do anúncio;
+- fotos de detalhe (roda, pedal, retrovisor) foram descartadas.
+
+> As fotos mostram **o modelo anunciado, não o carro que está no pátio**. Isso está dito
+> no rodapé e na página de créditos. Ao subir as fotos reais do estoque, troque os
+> caminhos em `src/data/photos.ts` e o aviso pode sair.
+
+Para usar fotos próprias, coloque os arquivos em `public/fotos/` e ajuste o mapa:
 
 ```ts
-photos: ["/fotos/onix-2022-lateral.jpg", "/fotos/onix-2022-frente.jpg"],
+// src/data/photos.ts
+"001": [{ file: "/fotos/onix-frente.jpg", title: "", author: "", license: "", source: "" }],
 ```
 
-O componente `VehiclePhoto` usa a foto quando ela existe e cai na ilustração quando não
-existe — nenhuma outra mudança é necessária.
+Quando um anúncio não tem foto nenhuma, o componente `VehicleMedia` cai numa ilustração
+vetorial gerada a partir da carroceria e da cor — o site nunca fica com espaço vazio.
 
 ## Arquitetura
 Next.js 16 (App Router) + TypeScript + Tailwind CSS v4.

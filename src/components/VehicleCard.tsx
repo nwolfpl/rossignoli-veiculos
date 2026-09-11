@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/Badge";
-import { VehiclePhoto } from "@/components/VehiclePhoto";
+import { VehicleMedia } from "@/components/VehiclePhoto";
 import type { Vehicle } from "@/domain/types";
 import { daysSince, formatKm, formatPrice, formatYear } from "@/lib/format";
 
@@ -19,7 +19,7 @@ export function VehicleCard({ vehicle, averagePrice }: Props) {
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-ink-200 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-400/50 hover:shadow-[0_28px_60px_-34px_rgba(13,15,18,0.65)]">
       <div className="relative overflow-hidden bg-ink-100">
-        <VehiclePhoto
+        <VehicleMedia
           vehicle={vehicle}
           className="aspect-[16/10] w-full transition duration-700 group-hover:scale-[1.04]"
         />

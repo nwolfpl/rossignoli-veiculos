@@ -1,23 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import {
-  PHOTO_VIEWS,
-  VIEW_LABELS,
-  VehiclePhoto,
-  type PhotoView,
-} from "@/components/VehiclePhoto";
+import { VehicleMedia, slideCount } from "@/components/VehiclePhoto";
+import { creditsFor } from "@/data/photos";
 import type { Vehicle } from "@/domain/types";
 
 export function Gallery({ vehicle }: { vehicle: Vehicle }) {
+  const total = slideCount(vehicle);
+  const credits = creditsFor(vehicle.id);
   const [index, setIndex] = useState(0);
   const [zoomed, setZoomed] = useState(false);
-  const view: PhotoView = PHOTO_VIEWS[index];
+  const credit = credits[index];
 
   const move = useCallback(
-    (delta: number) =>
-      setIndex((current) => (current + delta + PHOTO_VIEWS.length) % PHOTO_VIEWS.length),
-    [],
+    (delta: number) => setIndex((current) => (current + delta + total) % total),
+    [total],
   );
 
   useEffect(() => {
@@ -32,66 +30,94 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <div>
-      <div className="group relative overflow-hidden rounded-xl border border-fumaca">
+      <div className="relative overflow-hidden rounded-xl border border-fumaca bg-asfalto">
         <button
           type="button"
           onClick={() => setZoomed(true)}
           className="block w-full cursor-zoom-in"
           aria-label="Ampliar imagem"
         >
-          <VehiclePhoto
+          <VehicleMedia
             vehicle={vehicle}
-            view={view}
+            index={index}
             variant="stage"
+            priority
             className="aspect-[16/10] w-full"
           />
         </button>
 
-        <button
-          type="button"
-          onClick={() => move(-1)}
-          aria-label="Imagem anterior"
-          className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-fumaca bg-asfalto/70 text-lg text-white backdrop-blur transition hover:bg-asfalto"
-        >
-          ‹
-        </button>
-        <button
-          type="button"
-          onClick={() => move(1)}
-          aria-label="Próxima imagem"
-          className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-fumaca bg-asfalto/70 text-lg text-white backdrop-blur transition hover:bg-asfalto"
-        >
-          ›
-        </button>
+        {total > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() => move(-1)}
+              aria-label="Imagem anterior"
+              className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-fumaca bg-asfalto/70 text-lg text-white backdrop-blur transition hover:bg-asfalto"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => move(1)}
+              aria-label="Próxima imagem"
+              className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-fumaca bg-asfalto/70 text-lg text-white backdrop-blur transition hover:bg-asfalto"
+            >
+              ›
+            </button>
+          </>
+        )}
 
-        <p className="label absolute bottom-4 right-4 rounded bg-asfalto/80 px-2.5 py-1.5 text-cromo/70">
-          {index + 1}/{PHOTO_VIEWS.length} · imagem ilustrativa
+        <p className="label absolute bottom-4 right-4 rounded bg-asfalto/85 px-2.5 py-1.5 text-cromo/70">
+          {index + 1}/{total}
         </p>
       </div>
 
-      <div className="mt-3 grid grid-cols-4 gap-3">
-        {PHOTO_VIEWS.map((item, itemIndex) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => setIndex(itemIndex)}
-            aria-label={`Ver ${VIEW_LABELS[item]}`}
-            aria-current={itemIndex === index}
-            className={`overflow-hidden rounded-lg border transition ${
-              itemIndex === index
-                ? "border-brand-500"
-                : "border-fumaca opacity-60 hover:opacity-100"
-            }`}
-          >
-            <VehiclePhoto
-              vehicle={vehicle}
-              view={item}
-              variant="stage"
-              className="aspect-[16/10] w-full"
-            />
-          </button>
-        ))}
-      </div>
+      {total > 1 && (
+        <div className="mt-3 grid grid-cols-4 gap-3">
+          {Array.from({ length: total }, (_, slide) => (
+            <button
+              key={slide}
+              type="button"
+              onClick={() => setIndex(slide)}
+              aria-label={`Ver imagem ${slide + 1}`}
+              aria-current={slide === index}
+              className={`overflow-hidden rounded-lg border transition ${
+                slide === index
+                  ? "border-brand-500"
+                  : "border-fumaca opacity-60 hover:opacity-100"
+              }`}
+            >
+              <VehicleMedia
+                vehicle={vehicle}
+                index={slide}
+                variant="stage"
+                className="aspect-[16/10] w-full"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      <p className="mt-3 font-mono text-[11px] leading-relaxed text-cromo/45">
+        {credit ? (
+          <>
+            Foto do modelo: {credit.author} · {credit.license} ·{" "}
+            <a
+              href={credit.source}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 transition hover:text-cromo"
+            >
+              Wikimedia Commons
+            </a>{" "}
+            · <Link href="/creditos" className="underline underline-offset-2 hover:text-cromo">
+              créditos
+            </Link>
+          </>
+        ) : (
+          "Imagem ilustrativa gerada para o protótipo."
+        )}
+      </p>
 
       {zoomed && (
         <div
@@ -103,30 +129,29 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
           <button
             type="button"
             onClick={() => setZoomed(false)}
-            className="absolute right-5 top-5 label rounded border border-fumaca px-3 py-2 text-cromo transition hover:text-white"
+            className="label absolute right-5 top-5 rounded border border-fumaca px-3 py-2 text-cromo transition hover:text-white"
           >
             Fechar (esc)
           </button>
-          <VehiclePhoto
+          <VehicleMedia
             vehicle={vehicle}
-            view={view}
+            index={index}
             variant="stage"
-            className="max-h-[80vh] w-full max-w-5xl rounded-xl"
+            className="max-h-[82vh] w-auto max-w-5xl rounded-xl"
           />
-          <div className="absolute bottom-6 flex gap-3">
-            {PHOTO_VIEWS.map((item, itemIndex) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setIndex(itemIndex)}
-                className={`label px-3 py-1.5 transition ${
-                  itemIndex === index ? "text-brand-500" : "text-cromo/50 hover:text-cromo"
-                }`}
-              >
-                {VIEW_LABELS[item]}
+          {total > 1 && (
+            <div className="label absolute bottom-6 flex items-center gap-4 text-cromo/60">
+              <button type="button" onClick={() => move(-1)} className="hover:text-white">
+                anterior
               </button>
-            ))}
-          </div>
+              <span className="text-cromo/40">
+                {index + 1}/{total}
+              </span>
+              <button type="button" onClick={() => move(1)} className="hover:text-white">
+                próxima
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

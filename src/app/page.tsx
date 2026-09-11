@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { SearchBox } from "@/components/SearchBox";
 import { VehicleCard } from "@/components/VehicleCard";
-import { BodyIcon, VehiclePhoto } from "@/components/VehiclePhoto";
+import { BodyIcon, VehicleMedia } from "@/components/VehiclePhoto";
 import type { Body } from "@/domain/types";
 import { averagePriceByBody } from "@/lib/filters";
 import { formatPrice, formatYear } from "@/lib/format";
@@ -85,12 +85,23 @@ export default function HomePage() {
                 aria-label={`Ver anúncio do ${hero.brand} ${hero.model} ${hero.version}`}
               >
                 <div className="sweep relative">
-                  <VehiclePhoto
+                  <VehicleMedia
                     vehicle={hero}
                     variant="stage"
+                    priority
                     className="aspect-[16/10] w-full"
                   />
                 </div>
+
+                {/* véu escuro: mantém título e preço legíveis sobre a foto */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 hidden h-2/5 bg-gradient-to-b from-asfalto/85 to-transparent lg:block"
+                />
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-1/2 bg-gradient-to-t from-asfalto/90 via-asfalto/40 to-transparent lg:block"
+                />
 
                 <div className="p-5 lg:absolute lg:left-5 lg:top-5 lg:p-0">
                   <p className="label text-brand-500">Destaque do pátio</p>
