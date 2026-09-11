@@ -1,0 +1,5 @@
+:HL["/rossignoli-veiculos/_next/static/chunks/3t9vso9bpjbjs.css","style"]
+:HL["/rossignoli-veiculos/_next/static/media/051742360c26797e-s.p.1bkzbscqrt8rl.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/rossignoli-veiculos/_next/static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/rossignoli-veiculos/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"anuncio","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"chevrolet-agile-ls-spirit-1-4-2012-002","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Hv4txSAClPHS6jlXmAQhc"}
