@@ -95,6 +95,31 @@ Decisões que importam para a evolução:
    código a partir da carroceria e da cor (`VehiclePhoto`), o que evita problemas de
    licença no protótipo. Quando houver fotos reais, basta trocar esse componente.
 
+## Site publicado
+
+**https://nwolfpl.github.io/rossignoli-veiculos/**
+
+O site é exportado como HTML estático e servido pelo GitHub Pages a partir do branch
+`gh-pages`. Para publicar uma atualização depois de dar push na `main`:
+
+```bash
+npm run deploy
+```
+
+Isso gera a pasta `out/`. Em seguida, copie o conteúdo para o worktree do branch
+`gh-pages` e faça o push:
+
+```bash
+git worktree add --orphan -b gh-pages /tmp/rv-pages
+cp -R out/. /tmp/rv-pages/
+cd /tmp/rv-pages && git add -A && git commit -m "Atualiza site" && git push -u origin gh-pages
+```
+
+Nas próximas vezes o worktree já existe: basta copiar, commitar e dar push.
+
+> Para hospedar na Vercel (domínio próprio e deploy automático a cada push), conecte
+> a conta do GitHub em vercel.com/account/login-connections e ligue o repositório.
+
 ## Antes de colocar no ar
 
 - Substituir os contatos placeholder em `src/lib/site.ts` (WhatsApp, telefone, e-mail, endereço).
