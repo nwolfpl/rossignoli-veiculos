@@ -15,3 +15,11 @@ export const SITE = {
 
 export const whatsappLink = (message: string) =>
   `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(message)}`;
+
+/**
+ * Prefixa caminhos de /public com o basePath do site.
+ * Necessário porque o GitHub Pages serve o projeto em um subdiretório e
+ * a tag <img> não recebe esse prefixo automaticamente.
+ */
+export const asset = (path: string) =>
+  `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;

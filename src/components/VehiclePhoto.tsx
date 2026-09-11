@@ -1,4 +1,5 @@
 import type { Body, Vehicle } from "@/domain/types";
+import { asset } from "@/lib/site";
 
 export type PhotoView = "lateral" | "frente" | "painel" | "interior";
 export type PhotoVariant = "studio" | "stage";
@@ -334,7 +335,7 @@ export function VehicleMedia({
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={photo}
+        src={asset(photo)}
         alt={`${vehicle.brand} ${vehicle.model} ${vehicle.version} ${vehicle.modelYear}`}
         className={`object-cover ${className ?? ""}`}
         loading={priority ? "eager" : "lazy"}
