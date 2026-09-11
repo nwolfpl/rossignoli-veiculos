@@ -17,7 +17,7 @@ export function Header() {
           className="flex items-center gap-3"
           aria-label="Rossignoli Veículos, início"
         >
-          <Logo variant="mark" className="h-9 w-11" />
+          <Logo variant="mark" priority className="h-9 w-auto" />
           <span className="hidden leading-none sm:block">
             <span className="block font-display text-[15px] font-extrabold italic tracking-tight text-white">
               ROSSIGNOLI

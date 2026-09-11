@@ -60,14 +60,16 @@ export default function HomePage() {
           <div className="grid items-center gap-10 lg:grid-cols-12">
             <div className="lg:col-span-5">
               <p className="label rise text-brand-500">
-                {SITE.name} — {SITE.city}
+                {SITE.city} · Seminovos e usados selecionados
               </p>
               <h1
-                className="rise mt-5 font-display text-4xl font-extrabold leading-[0.98] tracking-tight text-white sm:text-5xl lg:text-6xl"
+                className="rise mt-5 font-display text-[2.1rem] font-extrabold leading-[1.02] tracking-tight text-white sm:text-[2.7rem] lg:text-5xl"
                 style={{ animationDelay: "80ms" }}
               >
-                Seu próximo carro
-                <span className="block text-brand-500">sob a luz certa.</span>
+                Há mais de 30 anos,
+                <span className="block text-brand-500">
+                  sua escolha certa no Sul de Minas.
+                </span>
               </h1>
               <p
                 className="rise mt-6 max-w-md text-base leading-relaxed text-cromo/75"

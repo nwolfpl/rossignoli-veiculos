@@ -34,6 +34,13 @@ export const metadata: Metadata = {
     description: SITE.tagline,
     locale: "pt_BR",
     type: "website",
+    images: [{ url: "og.jpg", width: 1200, height: 630, alt: SITE.name }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE.name} — seminovos selecionados`,
+    description: SITE.tagline,
+    images: ["og.jpg"],
   },
 };
 

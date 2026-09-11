@@ -8,7 +8,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
           <div>
-            <Logo variant="full" withTagline className="h-32 w-auto" />
+            <Logo variant="full" className="h-36 w-auto" />
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-cromo/70">{SITE.tagline}</p>
           </div>
 

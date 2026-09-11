@@ -10,7 +10,9 @@ export const SITE = {
   email: "contato@rossignoliveiculos.com.br",
   city: "Varginha - MG",
   hours: "Seg a sex, 8h às 18h • Sáb, 8h às 12h",
-  url: "https://rossignoliveiculos.com.br",
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "https://nwolfpl.github.io/rossignoli-veiculos/",
 } as const;
 
 export const whatsappLink = (message: string) =>
