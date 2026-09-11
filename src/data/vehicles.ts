@@ -81,6 +81,7 @@ const seeds: VehicleSeed[] = [
       "Som original",
     ],
     highlighted: true,
+    showcase: true,
     publishedAt: "2026-09-08",
     description: "Agile LS Spirit 1.4 com ar-condicionado gelando e manutenção recente na suspensão. Documentação sem pendências.",
   },

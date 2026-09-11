@@ -10,6 +10,8 @@ export interface VehicleRepository {
   search(query: VehicleQuery): Vehicle[];
   getBySlug(slug: string): Vehicle | undefined;
   getHighlighted(limit?: number): Vehicle[];
+  /** Carro do palco da home: o marcado como showcase, ou o destaque mais caro. */
+  getShowcase(): Vehicle;
   getRelated(vehicle: Vehicle, limit?: number): Vehicle[];
   listBrands(): string[];
   /** Faixa de preço de uma carroceria — alimenta a régua de preço do anúncio. */
@@ -27,6 +29,12 @@ export const vehicleRepository: VehicleRepository = {
       VEHICLES.filter((vehicle) => vehicle.highlighted),
       "relevancia",
     ).slice(0, limit),
+
+  getShowcase: () =>
+    VEHICLES.find((vehicle) => vehicle.showcase) ??
+    [...VEHICLES]
+      .filter((vehicle) => vehicle.highlighted)
+      .sort((a, b) => b.price - a.price)[0],
 
   getRelated: (vehicle, limit = 3) =>
     VEHICLES.filter(

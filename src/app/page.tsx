@@ -40,8 +40,7 @@ export default function HomePage() {
   const highlighted = vehicleRepository.getHighlighted(6);
   const brands = vehicleRepository.listBrands();
   const averages = averagePriceByBody(vehicles);
-  // O destaque do hero é o carro mais caro entre os selecionados — é o que carrega a cena.
-  const hero = [...highlighted].sort((a, b) => b.price - a.price)[0];
+  const hero = vehicleRepository.getShowcase();
 
   const prices = vehicles.map((vehicle) => vehicle.price);
   const cities = new Set(vehicles.map((vehicle) => vehicle.city));

@@ -44,6 +44,8 @@ export interface Vehicle {
   features: string[];
   sellerId: string;
   highlighted: boolean;
+  /** Carro que ocupa o palco da home. Só um por vez. */
+  showcase?: boolean;
   publishedAt: string;
   status: ListingStatus;
   description: string;
