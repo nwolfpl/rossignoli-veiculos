@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/Badge";
 import { VehicleMedia } from "@/components/VehiclePhoto";
 import type { Vehicle } from "@/domain/types";
+import { DEFAULT_TERM, showcaseInstallment } from "@/lib/finance";
 import { daysSince, formatKm, formatPrice, formatYear } from "@/lib/format";
 
 type Props = {
@@ -45,9 +46,14 @@ export function VehicleCard({ vehicle, averagePrice }: Props) {
           {vehicle.transmission}
         </p>
 
-        <p className="tnum font-display text-2xl font-extrabold tracking-tight">
-          {formatPrice(vehicle.price)}
-        </p>
+        <div>
+          <p className="tnum font-display text-2xl font-extrabold tracking-tight">
+            {formatPrice(vehicle.price)}
+          </p>
+          <p className="tnum mt-1 font-mono text-[11px] text-ink-500">
+            ou {formatPrice(showcaseInstallment(vehicle.price))}/mês em {DEFAULT_TERM}x
+          </p>
+        </div>
 
         {(belowAverage || lowMileage || isNew) && (
           <div className="flex flex-wrap gap-1.5">

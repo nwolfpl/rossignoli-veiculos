@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContactForm } from "@/components/ContactForm";
 import { Gallery } from "@/components/Gallery";
+import { FinanceSimulator } from "@/components/FinanceSimulator";
 import { PriceScale } from "@/components/PriceScale";
 import { Reveal } from "@/components/Reveal";
 import { VehicleCard } from "@/components/VehicleCard";
+import { DEFAULT_TERM, showcaseInstallment } from "@/lib/finance";
 import { formatKm, formatPrice, formatYear } from "@/lib/format";
 import { SITE, whatsappLink } from "@/lib/site";
 import { vehicleRepository } from "@/services/vehicleRepository";
@@ -106,7 +108,11 @@ export default async function AnuncioPage({ params }: Params) {
                 <p className="tnum mt-6 font-display text-4xl font-extrabold tracking-tight text-white">
                   {formatPrice(vehicle.price)}
                 </p>
-                <p className="label mt-2 text-cromo/50">
+                <p className="tnum mt-2 font-mono text-xs text-cromo/60">
+                  ou {formatPrice(showcaseInstallment(vehicle.price))}/mês em {DEFAULT_TERM}x
+                  <span className="text-cromo/40"> · simulação</span>
+                </p>
+                <p className="label mt-3 text-cromo/50">
                   {vehicle.city} · {vehicle.state}
                 </p>
 
@@ -209,7 +215,7 @@ export default async function AnuncioPage({ params }: Params) {
 
           <aside className="space-y-8">
             <Reveal>
-              <div className="rounded-xl border border-ink-200 p-6">
+              <div className="rounded-xl border border-ink-200 bg-white p-6">
                 <PriceScale
                   price={vehicle.price}
                   min={range.min}
@@ -224,7 +230,11 @@ export default async function AnuncioPage({ params }: Params) {
             </Reveal>
 
             <Reveal>
-              <div className="rounded-xl border border-ink-200 p-6">
+              <FinanceSimulator price={vehicle.price} vehicleTitle={`${title} ${vehicle.year}`} />
+            </Reveal>
+
+            <Reveal>
+              <div className="rounded-xl border border-ink-200 bg-white p-6">
                 <h2 className="font-display text-base font-extrabold tracking-tight">
                   Falar sobre este carro
                 </h2>
@@ -259,6 +269,9 @@ export default async function AnuncioPage({ params }: Params) {
           <p className="label truncate text-cromo/50">{vehicle.model}</p>
           <p className="tnum font-display text-lg font-extrabold leading-tight text-white">
             {formatPrice(vehicle.price)}
+          </p>
+          <p className="tnum font-mono text-[10px] text-cromo/50">
+            {formatPrice(showcaseInstallment(vehicle.price))}/mês
           </p>
         </div>
         <a

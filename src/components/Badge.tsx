@@ -6,7 +6,7 @@ const TONES: Record<Tone, string> = {
   neutral: "bg-ink-100 text-ink-700",
   brand: "bg-brand-50 text-brand-700",
   success: "bg-verde/10 text-verde",
-  info: "bg-ink-900/5 text-ink-700",
+  info: "bg-azul/10 text-azul",
 };
 
 export function Badge({

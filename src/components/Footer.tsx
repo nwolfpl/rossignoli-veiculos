@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/Logo";
 import { SITE } from "@/lib/site";
 
 export function Footer() {
@@ -7,13 +8,8 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
           <div>
-            <p className="font-display text-2xl font-extrabold uppercase leading-none tracking-[0.14em] text-white">
-              Rossignoli
-              <span className="mt-1 block text-xs font-medium tracking-[0.42em] text-brand-500">
-                Veículos
-              </span>
-            </p>
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-cromo/70">{SITE.tagline}</p>
+            <Logo variant="full" withTagline className="h-32 w-auto" />
+            <p className="mt-6 max-w-xs text-sm leading-relaxed text-cromo/70">{SITE.tagline}</p>
           </div>
 
           <div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/Logo";
 import { SITE, whatsappLink } from "@/lib/site";
 
 const NAV = [
@@ -11,14 +12,18 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-fumaca bg-asfalto/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-3" aria-label="Rossignoli Veículos, início">
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-brand-500 font-display text-[13px] font-extrabold text-asfalto">
-            RV
-          </span>
-          <span className="hidden font-display text-[15px] font-bold uppercase leading-none tracking-[0.16em] text-white sm:block">
-            Rossignoli
-            <span className="mt-0.5 block text-[10px] font-medium tracking-[0.34em] text-cromo/70">
-              Veículos
+        <Link
+          href="/"
+          className="flex items-center gap-3"
+          aria-label="Rossignoli Veículos, início"
+        >
+          <Logo variant="mark" className="h-9 w-11" />
+          <span className="hidden leading-none sm:block">
+            <span className="block font-display text-[15px] font-extrabold italic tracking-tight text-white">
+              ROSSIGNOLI
+            </span>
+            <span className="mt-1 block font-display text-[9px] font-bold tracking-[0.42em] text-brand-500">
+              VEÍCULOS
             </span>
           </span>
         </Link>

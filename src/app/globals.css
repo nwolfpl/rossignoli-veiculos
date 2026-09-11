@@ -1,33 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  /* Showroom à noite */
-  --color-asfalto: #0d0f12;
-  --color-grafite: #191d23;
-  --color-fumaca: #262c34;
-  --color-cromo: #c9ced6;
-  --color-neblina: #f4f5f7;
+  /* Grafite quente — menos duro que preto puro, ainda premium */
+  --color-asfalto: #191d23;
+  --color-grafite: #232931;
+  --color-fumaca: #333b45;
+  --color-cromo: #cfd5dd;
+  --color-neblina: #f5f4f1;
+  --color-areia: #fbfaf8;
 
-  /* Farol — o laranja da marca, usado como luz */
-  --color-brand-50: #fff3ec;
-  --color-brand-100: #ffe0cd;
-  --color-brand-200: #ffbe98;
-  --color-brand-300: #ff9b62;
-  --color-brand-400: #ff7f38;
-  --color-brand-500: #ff6a1a;
-  --color-brand-600: #e0510a;
-  --color-brand-700: #b23e08;
+  /* Laranja da marca */
+  --color-brand-50: #fff4ec;
+  --color-brand-100: #ffe3cd;
+  --color-brand-200: #ffc49a;
+  --color-brand-300: #ffa367;
+  --color-brand-400: #ff8c3d;
+  --color-brand-500: #f2731a;
+  --color-brand-600: #d65a0c;
+  --color-brand-700: #a8460b;
 
-  --color-ink-900: #0d0f12;
-  --color-ink-800: #191d23;
-  --color-ink-700: #333a44;
-  --color-ink-500: #616b79;
-  --color-ink-400: #8f98a5;
-  --color-ink-200: #dde1e7;
-  --color-ink-100: #eceff3;
-  --color-ink-50: #f4f5f7;
+  --color-ink-900: #1b1f25;
+  --color-ink-800: #262c34;
+  --color-ink-700: #3d4652;
+  --color-ink-500: #6b7482;
+  --color-ink-400: #99a1ad;
+  --color-ink-200: #e4e3df;
+  --color-ink-100: #efeeea;
+  --color-ink-50: #f7f6f3;
 
-  --color-verde: #29b37a;
+  --color-verde: #2f9e6b;
+  --color-azul: #3f6ea8;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), var(--font-inter), sans-serif;
@@ -39,7 +41,7 @@
 }
 
 body {
-  background: #ffffff;
+  background: var(--color-areia);
   color: var(--color-ink-900);
   -webkit-font-smoothing: antialiased;
 }
@@ -60,9 +62,9 @@ body {
 /* O palco: poço de luz sobre o asfalto */
 .stage {
   background:
-    radial-gradient(120% 70% at 50% 12%, rgba(255, 106, 26, 0.14), transparent 62%),
-    radial-gradient(80% 55% at 50% 78%, rgba(201, 206, 214, 0.16), transparent 70%),
-    linear-gradient(180deg, #0d0f12 0%, #14181d 55%, #0d0f12 100%);
+    radial-gradient(110% 70% at 50% 8%, rgba(242, 115, 26, 0.2), transparent 62%),
+    radial-gradient(90% 60% at 50% 94%, rgba(207, 213, 221, 0.14), transparent 70%),
+    linear-gradient(180deg, #232931 0%, #191d23 55%, #1d232a 100%);
 }
 
 .stage-card {

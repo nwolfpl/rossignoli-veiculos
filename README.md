@@ -28,6 +28,9 @@ Abra http://localhost:3000. Para gerar a versão de produção: `npm run build &
   navegação por teclado, ficha técnica, equipamentos, régua de preço do segmento,
   dicas de segurança, veículos parecidos, CTA fixo no mobile, contato por WhatsApp e
   formulário de interesse (envio simulado).
+- **Simulação de parcela** — cada card mostra a parcela estimada (48x com 30% de
+  entrada) e o anúncio traz um simulador com entrada, prazo e taxa ajustáveis,
+  sempre marcado como cálculo ilustrativo.
 - **Estados de vazio e 404** — busca sem resultado oferece limpar os filtros.
 - **Acessibilidade** — foco visível, navegação por teclado na galeria, alt nas
   ilustrações e contraste conferido nas faixas escuras.
@@ -40,12 +43,16 @@ O conceito é **"showroom à noite"**: o carro aparece dentro de um poço de luz
 asfalto, com reflexo no chão. A página alterna faixas escuras (showroom, emoção) e
 claras (catálogo, função).
 
-- **Paleta** — asfalto `#0D0F12`, grafite `#191D23`, cromo `#C9CED6`, névoa `#F4F5F7`
-  e farol `#FF6A1A`. O laranja da marca é usado como *luz*, não como enfeite: aparece
+- **Paleta** — grafite quente `#191D23`, cromo `#CFD5DD`, areia `#FBFAF8` e o laranja
+  da marca `#F2731A`. O fundo claro é levemente quente, não branco clínico. O laranja da marca é usado como *luz*, não como enfeite: aparece
   no facho do palco, nas etiquetas e no botão de contato.
 - **Tipografia** — Archivo (display, industrial, de sinalização) para títulos e preços,
   Inter para texto corrido e JetBrains Mono para dados: ano, km, etiquetas e faixas de
   preço. O mono dá o tom de instrumento de painel.
+- **Marca** — o monograma RV (laranja + cromo) e o lockup "Rossignoli Veículos"
+  são desenhados em SVG (`src/components/Logo.tsx`), então ficam nítidos em
+  qualquer tamanho. Para usar o arquivo original da marca, salve-o em
+  `public/logo.png` e troque o conteúdo desse componente por uma imagem.
 - **Elemento-assinatura** — o palco iluminado, repetido no hero, nos cards e na galeria.
   Apoiado pela régua de ticks de odômetro, que no anúncio marca onde o preço do carro
   cai dentro da faixa daquela carroceria no estoque.
@@ -141,7 +148,6 @@ Nas próximas vezes o worktree já existe: basta copiar, commitar e dar push.
 ## Próximos passos possíveis
 
 - Favoritos e comparação de veículos
-- Simulador de financiamento (ilustrativo)
 - Área do vendedor: publicar anúncio e acompanhar visualizações/contatos
 - Registro real dos leads do formulário (hoje o envio é simulado)
 - Backend + painel de administração do estoque
