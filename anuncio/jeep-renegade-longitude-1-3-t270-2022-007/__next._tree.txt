@@ -1,0 +1,5 @@
+:HL["/rossignoli-veiculos/_next/static/chunks/084c0hd7yt_4t.css","style"]
+:HL["/rossignoli-veiculos/_next/static/media/051742360c26797e-s.p.1bkzbscqrt8rl.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/rossignoli-veiculos/_next/static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/rossignoli-veiculos/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"anuncio","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"jeep-renegade-longitude-1-3-t270-2022-007","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"NeTha7Z9_p27yh4a1G_tM"}
