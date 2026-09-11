@@ -4,6 +4,7 @@ import { SearchBox } from "@/components/SearchBox";
 import { VehicleCard } from "@/components/VehicleCard";
 import { BodyIcon, VehicleMedia } from "@/components/VehiclePhoto";
 import type { Body } from "@/domain/types";
+import { DEFAULT_TERM, showcaseInstallment } from "@/lib/finance";
 import { averagePriceByBody } from "@/lib/filters";
 import { formatPrice, formatYear } from "@/lib/format";
 import { SITE } from "@/lib/site";
@@ -132,9 +133,14 @@ export default function HomePage() {
                       <dd className="mt-1 text-sm text-white">{hero.transmission}</dd>
                     </div>
                   </dl>
-                  <p className="tnum font-display text-2xl font-extrabold text-white sm:text-3xl">
-                    {formatPrice(hero.price)}
-                  </p>
+                  <div className="text-right">
+                    <p className="tnum font-display text-2xl font-extrabold leading-none text-white sm:text-3xl">
+                      {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(hero.price))}
+                    </p>
+                    <p className="tnum mt-1.5 font-mono text-[11px] text-cromo/60">
+                      {formatPrice(hero.price)} à vista
+                    </p>
+                  </div>
                 </div>
               </Link>
             </div>

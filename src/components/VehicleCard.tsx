@@ -47,12 +47,14 @@ export function VehicleCard({ vehicle, averagePrice }: Props) {
         </p>
 
         <div>
-          <p className="tnum font-display text-2xl font-extrabold tracking-tight">
-            {formatPrice(vehicle.price)}
+          <p className="tnum font-display text-2xl font-extrabold leading-none tracking-tight">
+            {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
           </p>
-          <p className="tnum mt-1 font-mono text-[11px] text-ink-500">
-            ou {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
-            <span className="text-ink-400"> · entrada 30%</span>
+          <p className="tnum mt-1.5 font-mono text-[11px] text-ink-500">
+            entrada 30% ·{" "}
+            <span className="font-medium text-ink-700">
+              {formatPrice(vehicle.price)} à vista
+            </span>
           </p>
         </div>
 

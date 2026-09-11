@@ -7,7 +7,7 @@ import { FinanceSimulator } from "@/components/FinanceSimulator";
 import { PriceScale } from "@/components/PriceScale";
 import { Reveal } from "@/components/Reveal";
 import { VehicleCard } from "@/components/VehicleCard";
-import { DEFAULT_TERM, showcaseInstallment } from "@/lib/finance";
+import { DEFAULT_TERM, EXAMPLE_MONTHLY_RATE, showcaseInstallment } from "@/lib/finance";
 import { formatKm, formatPrice, formatYear } from "@/lib/format";
 import { SITE, whatsappLink } from "@/lib/site";
 import { vehicleRepository } from "@/services/vehicleRepository";
@@ -105,12 +105,17 @@ export default async function AnuncioPage({ params }: Params) {
                   ))}
                 </dl>
 
-                <p className="tnum mt-6 font-display text-4xl font-extrabold tracking-tight text-white">
-                  {formatPrice(vehicle.price)}
+                <p className="label mt-6 text-cromo/50">A partir de</p>
+                <p className="tnum mt-2 font-display text-4xl font-extrabold leading-none tracking-tight text-white">
+                  {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
                 </p>
-                <p className="tnum mt-2 font-mono text-xs text-cromo/60">
-                  ou {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
-                  <span className="text-cromo/40"> · entrada 30%, simulação</span>
+                <p className="tnum mt-3 font-mono text-xs text-cromo/60">
+                  entrada de {formatPrice(vehicle.price * 0.3)} · simulação em{" "}
+                  {(EXAMPLE_MONTHLY_RATE * 100).toFixed(0)}% a.m.
+                </p>
+                <p className="tnum mt-4 border-t border-fumaca pt-4 text-lg font-semibold text-cromo">
+                  {formatPrice(vehicle.price)}{" "}
+                  <span className="text-sm font-normal text-cromo/50">à vista</span>
                 </p>
                 <p className="label mt-3 text-cromo/50">
                   {vehicle.city} · {vehicle.state}
@@ -268,10 +273,10 @@ export default async function AnuncioPage({ params }: Params) {
         <div className="min-w-0">
           <p className="label truncate text-cromo/50">{vehicle.model}</p>
           <p className="tnum font-display text-lg font-extrabold leading-tight text-white">
-            {formatPrice(vehicle.price)}
+            {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
           </p>
           <p className="tnum font-mono text-[10px] text-cromo/50">
-            {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
+            {formatPrice(vehicle.price)} à vista
           </p>
         </div>
         <a
