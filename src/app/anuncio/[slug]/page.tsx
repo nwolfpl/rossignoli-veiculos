@@ -109,8 +109,8 @@ export default async function AnuncioPage({ params }: Params) {
                   {formatPrice(vehicle.price)}
                 </p>
                 <p className="tnum mt-2 font-mono text-xs text-cromo/60">
-                  ou {formatPrice(showcaseInstallment(vehicle.price))}/mês em {DEFAULT_TERM}x
-                  <span className="text-cromo/40"> · simulação</span>
+                  ou {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
+                  <span className="text-cromo/40"> · entrada 30%, simulação</span>
                 </p>
                 <p className="label mt-3 text-cromo/50">
                   {vehicle.city} · {vehicle.state}
@@ -271,7 +271,7 @@ export default async function AnuncioPage({ params }: Params) {
             {formatPrice(vehicle.price)}
           </p>
           <p className="tnum font-mono text-[10px] text-cromo/50">
-            {formatPrice(showcaseInstallment(vehicle.price))}/mês
+            {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
           </p>
         </div>
         <a

@@ -5,9 +5,9 @@
  * para o protótipo, NÃO uma oferta: a taxa real depende do banco, do perfil
  * do comprador, do prazo e da entrada.
  */
-export const EXAMPLE_MONTHLY_RATE = 0.0199;
+export const EXAMPLE_MONTHLY_RATE = 0.03;
 
-export const DEFAULT_TERM = 48;
+export const DEFAULT_TERM = 60;
 export const TERM_OPTIONS = [12, 24, 36, 48, 60];
 export const DEFAULT_DOWN_RATE = 0.3;
 
@@ -39,6 +39,6 @@ export const simulate = (
   return { financed, installment, total, interest: installment * months - financed };
 };
 
-/** Parcela de vitrine: entrada de 30% em 48 vezes. */
+/** Parcela de vitrine: entrada de 30% no prazo mais longo. */
 export const showcaseInstallment = (price: number) =>
   simulate(price, price * DEFAULT_DOWN_RATE, DEFAULT_TERM).installment;

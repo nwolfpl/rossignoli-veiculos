@@ -51,7 +51,8 @@ export function VehicleCard({ vehicle, averagePrice }: Props) {
             {formatPrice(vehicle.price)}
           </p>
           <p className="tnum mt-1 font-mono text-[11px] text-ink-500">
-            ou {formatPrice(showcaseInstallment(vehicle.price))}/mês em {DEFAULT_TERM}x
+            ou {DEFAULT_TERM}x de {formatPrice(showcaseInstallment(vehicle.price))}
+            <span className="text-ink-400"> · entrada 30%</span>
           </p>
         </div>
 
