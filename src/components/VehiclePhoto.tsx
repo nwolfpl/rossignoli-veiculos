@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Body, Vehicle } from "@/domain/types";
 import { asset } from "@/lib/site";
 
@@ -333,13 +334,14 @@ export function VehicleMedia({
 
   if (photo) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <Image
         src={asset(photo)}
         alt={`${vehicle.brand} ${vehicle.model} ${vehicle.version} ${vehicle.modelYear}`}
+        width={1400}
+        height={933}
+        priority={priority}
+        unoptimized
         className={`object-cover ${className ?? ""}`}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
       />
     );
   }
