@@ -17,21 +17,58 @@ Abra http://localhost:3000. Para gerar a versão de produção: `npm run build &
 
 ## O que já funciona
 
-- **Home** — busca principal (texto + marca + preço), marcas do estoque, destaques,
-  atalhos por categoria e explicação de como funciona a compra.
+- **Home** — hero com o destaque do pátio no palco iluminado, console de busca
+  (texto + marca + preço), destaques da semana, atalhos por carroceria e o processo
+  de compra.
 - **Estoque (`/carros`)** — filtros combináveis por marca, carroceria, câmbio, combustível,
   faixa de preço, ano e quilometragem, além de busca por texto e 5 critérios de ordenação.
   Os filtros vivem na URL, então qualquer busca pode ser compartilhada por link.
   Em telas pequenas os filtros abrem em painel inferior.
-- **Anúncio (`/anuncio/[slug]`)** — galeria com 4 ângulos, ficha técnica completa,
-  lista de equipamentos, dicas de segurança, veículos parecidos, CTA fixo no mobile,
-  contato por WhatsApp e formulário de interesse (envio simulado).
+- **Anúncio (`/anuncio/[slug]`)** — galeria em palco escuro com 4 ângulos, lightbox e
+  navegação por teclado, ficha técnica, equipamentos, régua de preço do segmento,
+  dicas de segurança, veículos parecidos, CTA fixo no mobile, contato por WhatsApp e
+  formulário de interesse (envio simulado).
 - **Estados de vazio e 404** — busca sem resultado oferece limpar os filtros.
+- **Acessibilidade** — foco visível, navegação por teclado na galeria, alt nas
+  ilustrações e contraste conferido nas faixas escuras.
 - **SEO básico** — títulos e descrições por página, URLs amigáveis, HTML semântico
   e pré-renderização estática de todos os anúncios.
 
-## Arquitetura
+## Direção visual
 
+O conceito é **"showroom à noite"**: o carro aparece dentro de um poço de luz sobre
+asfalto, com reflexo no chão. A página alterna faixas escuras (showroom, emoção) e
+claras (catálogo, função).
+
+- **Paleta** — asfalto `#0D0F12`, grafite `#191D23`, cromo `#C9CED6`, névoa `#F4F5F7`
+  e farol `#FF6A1A`. O laranja da marca é usado como *luz*, não como enfeite: aparece
+  no facho do palco, nas etiquetas e no botão de contato.
+- **Tipografia** — Archivo (display, industrial, de sinalização) para títulos e preços,
+  Inter para texto corrido e JetBrains Mono para dados: ano, km, etiquetas e faixas de
+  preço. O mono dá o tom de instrumento de painel.
+- **Elemento-assinatura** — o palco iluminado, repetido no hero, nos cards e na galeria.
+  Apoiado pela régua de ticks de odômetro, que no anúncio marca onde o preço do carro
+  cai dentro da faixa daquela carroceria no estoque.
+- **Movimento** — uma passagem de brilho na lataria ao carregar o hero, entradas suaves
+  ao rolar e elevação no hover dos cards. Tudo desligado para quem pede
+  `prefers-reduced-motion`.
+
+## Fotos dos veículos
+
+O protótipo desenha cada carro em SVG (lataria com gradiente, vidros, rodas com raios,
+sombra de contato e reflexo) a partir da carroceria e da cor. É um recurso temporário
+para não usar imagem de terceiros — **fotos reais do estoque terão impacto muito maior**.
+
+Para usar fotos reais, basta preencher `photos` no veículo:
+
+```ts
+photos: ["/fotos/onix-2022-lateral.jpg", "/fotos/onix-2022-frente.jpg"],
+```
+
+O componente `VehiclePhoto` usa a foto quando ela existe e cai na ilustração quando não
+existe — nenhuma outra mudança é necessária.
+
+## Arquitetura
 Next.js 16 (App Router) + TypeScript + Tailwind CSS v4.
 
 ```

@@ -4,13 +4,17 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 const PRICE_OPTIONS = [
-  { value: "", label: "Qualquer preço" },
-  { value: "50000", label: "Até R$ 50.000" },
-  { value: "80000", label: "Até R$ 80.000" },
-  { value: "120000", label: "Até R$ 120.000" },
-  { value: "200000", label: "Até R$ 200.000" },
+  { value: "", label: "Qualquer valor" },
+  { value: "50000", label: "até R$ 50.000" },
+  { value: "80000", label: "até R$ 80.000" },
+  { value: "120000", label: "até R$ 120.000" },
+  { value: "200000", label: "até R$ 200.000" },
 ];
 
+const fieldClass =
+  "h-12 w-full rounded-md border border-fumaca bg-grafite px-3 text-sm text-white outline-none transition placeholder:text-cromo/40 focus:border-brand-500";
+
+/** Console de busca do hero — etiquetas em mono, como um painel. */
 export function SearchBox({ brands }: { brands: string[] }) {
   const router = useRouter();
   const [term, setTerm] = useState("");
@@ -29,32 +33,32 @@ export function SearchBox({ brands }: { brands: string[] }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-2 rounded-2xl border border-ink-200 bg-white p-2 shadow-[0_20px_50px_-30px_rgba(11,14,19,0.55)] sm:grid-cols-[1.4fr_1fr_1fr_auto]"
+      className="grid gap-4 rounded-lg border border-fumaca bg-asfalto/80 p-4 backdrop-blur sm:grid-cols-[1.5fr_1fr_1fr_auto] sm:items-end"
     >
-      <div className="sm:col-span-1">
-        <label htmlFor="busca" className="sr-only">
-          Qual carro você está procurando?
+      <div>
+        <label htmlFor="busca" className="label mb-2 block text-cromo/60">
+          Busca
         </label>
         <input
           id="busca"
           value={term}
           onChange={(event) => setTerm(event.target.value)}
-          placeholder="Qual carro você procura? Ex.: Onix"
-          className="h-12 w-full rounded-xl border border-transparent bg-ink-50 px-4 text-sm outline-none placeholder:text-ink-400 focus:border-ink-200"
+          placeholder="Onix, SUV automático, Hilux…"
+          className={fieldClass}
         />
       </div>
 
       <div>
-        <label htmlFor="marca" className="sr-only">
+        <label htmlFor="marca" className="label mb-2 block text-cromo/60">
           Marca
         </label>
         <select
           id="marca"
           value={brand}
           onChange={(event) => setBrand(event.target.value)}
-          className="h-12 w-full rounded-xl border border-transparent bg-ink-50 px-3 text-sm outline-none focus:border-ink-200"
+          className={fieldClass}
         >
-          <option value="">Todas as marcas</option>
+          <option value="">Todas</option>
           {brands.map((item) => (
             <option key={item} value={item}>
               {item}
@@ -64,14 +68,14 @@ export function SearchBox({ brands }: { brands: string[] }) {
       </div>
 
       <div>
-        <label htmlFor="preco" className="sr-only">
-          Preço máximo
+        <label htmlFor="preco" className="label mb-2 block text-cromo/60">
+          Preço
         </label>
         <select
           id="preco"
           value={maxPrice}
           onChange={(event) => setMaxPrice(event.target.value)}
-          className="h-12 w-full rounded-xl border border-transparent bg-ink-50 px-3 text-sm outline-none focus:border-ink-200"
+          className={fieldClass}
         >
           {PRICE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -83,9 +87,9 @@ export function SearchBox({ brands }: { brands: string[] }) {
 
       <button
         type="submit"
-        className="h-12 rounded-xl bg-brand-500 px-6 text-sm font-semibold text-white transition hover:bg-brand-600"
+        className="h-12 rounded-md bg-brand-500 px-7 font-display text-sm font-bold uppercase tracking-wider text-asfalto transition hover:bg-brand-400"
       >
-        Buscar carros
+        Ver carros
       </button>
     </form>
   );

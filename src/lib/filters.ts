@@ -34,6 +34,7 @@ const comparators: Record<SortKey, (a: Vehicle, b: Vehicle) => number> = {
   "maior-preco": (a, b) => b.price - a.price,
   "mais-novos": (a, b) => b.modelYear - a.modelYear || a.mileage - b.mileage,
   "menor-km": (a, b) => a.mileage - b.mileage,
+  "mais-recentes": (a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt),
 };
 
 export const sortVehicles = (vehicles: Vehicle[], sort: SortKey = "relevancia") =>

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContactForm } from "@/components/ContactForm";
 import { Gallery } from "@/components/Gallery";
+import { PriceScale } from "@/components/PriceScale";
+import { Reveal } from "@/components/Reveal";
 import { VehicleCard } from "@/components/VehicleCard";
 import { formatKm, formatPrice, formatYear } from "@/lib/format";
 import { SITE, whatsappLink } from "@/lib/site";
@@ -28,9 +30,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 const SAFETY_TIPS = [
-  "Veja o carro pessoalmente antes de fechar negócio.",
-  "Confirme a documentação e o histórico do veículo.",
-  "Nunca faça pagamento antecipado sem inspecionar o carro.",
+  "Veja o carro pessoalmente e leve seu mecânico de confiança.",
+  "Confira a documentação e o histórico antes de fechar.",
+  "Não faça pagamento antecipado sem inspecionar o veículo.",
 ];
 
 export default async function AnuncioPage({ params }: Params) {
@@ -39,6 +41,7 @@ export default async function AnuncioPage({ params }: Params) {
   if (!vehicle) notFound();
 
   const related = vehicleRepository.getRelated(vehicle, 3);
+  const range = vehicleRepository.priceRange(vehicle.body);
   const title = `${vehicle.brand} ${vehicle.model} ${vehicle.version}`;
   const contactMessage = `Olá! Tenho interesse no ${title} ${vehicle.year} anunciado por ${formatPrice(vehicle.price)}.`;
 
@@ -48,144 +51,221 @@ export default async function AnuncioPage({ params }: Params) {
     ["Versão", vehicle.version],
     ["Ano", formatYear(vehicle.year, vehicle.modelYear)],
     ["Quilometragem", formatKm(vehicle.mileage)],
+    ["Potência", `${vehicle.power} cv`],
     ["Combustível", vehicle.fuel],
     ["Câmbio", vehicle.transmission],
     ["Carroceria", vehicle.body],
     ["Cor", vehicle.color],
     ["Portas", String(vehicle.doors)],
+    ["Local", `${vehicle.city} - ${vehicle.state}`],
   ];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 pb-24 sm:px-6 lg:pb-10">
-      <nav aria-label="Você está em" className="text-sm text-ink-500">
-        <Link href="/" className="hover:text-ink-900">
-          Início
-        </Link>{" "}
-        /{" "}
-        <Link href="/carros" className="hover:text-ink-900">
-          Estoque
-        </Link>{" "}
-        / <span className="text-ink-700">{title}</span>
-      </nav>
+    <div className="pb-24 lg:pb-0">
+      {/* Palco do anúncio */}
+      <section className="stage border-b border-fumaca">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+          <nav aria-label="Você está em" className="mb-6 font-mono text-[11px] text-cromo/50">
+            <Link href="/" className="transition hover:text-white">
+              Início
+            </Link>
+            <span className="px-2">/</span>
+            <Link href="/carros" className="transition hover:text-white">
+              Estoque
+            </Link>
+            <span className="px-2">/</span>
+            <span className="text-cromo/80">{title}</span>
+          </nav>
 
-      <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_340px]">
-        <div>
-          <Gallery vehicle={vehicle} />
+          <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
+            <Gallery vehicle={vehicle} />
 
-          <section className="mt-8">
-            <h2 className="text-lg font-bold tracking-tight">Sobre o veículo</h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink-500">{vehicle.description}</p>
-          </section>
+            <aside>
+              <div className="rounded-xl border border-fumaca bg-grafite p-6">
+                {vehicle.highlighted && (
+                  <p className="label mb-4 text-brand-500">Destaque do pátio</p>
+                )}
+                <h1 className="font-display text-2xl font-extrabold leading-tight tracking-tight text-white">
+                  {vehicle.brand} {vehicle.model}
+                </h1>
+                <p className="mt-1 text-sm text-cromo/70">{vehicle.version}</p>
 
-          <section className="mt-8">
-            <h2 className="text-lg font-bold tracking-tight">Informações do veículo</h2>
-            <dl className="mt-3 grid gap-x-8 sm:grid-cols-2">
-              {specs.map(([label, value]) => (
-                <div
-                  key={label}
-                  className="flex items-center justify-between border-b border-ink-100 py-2.5 text-sm"
+                <dl className="mt-6 grid grid-cols-3 gap-3 border-y border-fumaca py-5">
+                  {[
+                    ["Ano", formatYear(vehicle.year, vehicle.modelYear)],
+                    ["Km", vehicle.mileage.toLocaleString("pt-BR")],
+                    ["Câmbio", vehicle.transmission],
+                  ].map(([label, value]) => (
+                    <div key={label}>
+                      <dt className="label text-cromo/45">{label}</dt>
+                      <dd className="tnum mt-1.5 text-sm text-white">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <p className="tnum mt-6 font-display text-4xl font-extrabold tracking-tight text-white">
+                  {formatPrice(vehicle.price)}
+                </p>
+                <p className="label mt-2 text-cromo/50">
+                  {vehicle.city} · {vehicle.state}
+                </p>
+
+                <a
+                  href={whatsappLink(contactMessage)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 block rounded-md bg-brand-500 py-4 text-center font-display text-sm font-bold uppercase tracking-wider text-asfalto transition hover:bg-brand-400"
                 >
-                  <dt className="text-ink-500">{label}</dt>
-                  <dd className="font-medium text-ink-900">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
+                  Tenho interesse
+                </a>
+                <p className="mt-3 text-center font-mono text-[11px] text-cromo/45">
+                  {SITE.hours}
+                </p>
+              </div>
 
-          <section className="mt-8">
-            <h2 className="text-lg font-bold tracking-tight">Equipamentos</h2>
-            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-              {vehicle.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm text-ink-700">
-                  <span aria-hidden className="text-emerald-600">
-                    ✓
-                  </span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </section>
+              <div className="mt-4 rounded-xl border border-fumaca p-6">
+                <p className="label text-cromo/45">Vendido por</p>
+                <p className="mt-3 font-display text-base font-bold text-white">{SITE.name}</p>
+                <p className="mt-1 text-sm text-cromo/60">Loja em {SITE.city}</p>
+                <p className="mt-4 font-mono text-[11px] text-cromo/45">
+                  Anúncio publicado em{" "}
+                  {new Date(vehicle.publishedAt).toLocaleDateString("pt-BR")}
+                </p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
 
-          <section className="mt-8 rounded-2xl border border-ink-200 bg-ink-50 p-5">
-            <h2 className="text-base font-bold tracking-tight">Compre com segurança</h2>
-            <ul className="mt-3 space-y-2 text-sm text-ink-500">
-              {SAFETY_TIPS.map((tip) => (
-                <li key={tip} className="flex gap-2">
-                  <span aria-hidden>•</span>
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </section>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="grid gap-12 py-14 lg:grid-cols-[1fr_340px]">
+          <div className="space-y-14">
+            <Reveal>
+              <section>
+                <h2 className="font-display text-xl font-extrabold tracking-tight">
+                  Sobre este carro
+                </h2>
+                <p className="mt-3 max-w-2xl leading-relaxed text-ink-500">
+                  {vehicle.description}
+                </p>
+              </section>
+            </Reveal>
+
+            <Reveal>
+              <section>
+                <h2 className="font-display text-xl font-extrabold tracking-tight">
+                  Ficha técnica
+                </h2>
+                <dl className="mt-5 grid gap-x-10 sm:grid-cols-2">
+                  {specs.map(([label, value]) => (
+                    <div
+                      key={label}
+                      className="flex items-baseline justify-between gap-4 border-b border-ink-100 py-3"
+                    >
+                      <dt className="label text-ink-400">{label}</dt>
+                      <dd className="tnum text-sm font-medium">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            </Reveal>
+
+            <Reveal>
+              <section>
+                <h2 className="font-display text-xl font-extrabold tracking-tight">
+                  Equipamentos
+                </h2>
+                <ul className="mt-5 grid gap-y-3 sm:grid-cols-2">
+                  {vehicle.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-3 text-sm text-ink-700">
+                      <span aria-hidden className="text-brand-500">
+                        —
+                      </span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </Reveal>
+
+            <Reveal>
+              <section className="rounded-xl bg-neblina p-6 sm:p-8">
+                <h2 className="font-display text-lg font-extrabold tracking-tight">
+                  Compre com segurança
+                </h2>
+                <ul className="mt-4 space-y-3">
+                  {SAFETY_TIPS.map((tip) => (
+                    <li key={tip} className="flex gap-3 text-sm text-ink-500">
+                      <span aria-hidden className="text-ink-400">
+                        —
+                      </span>
+                      {tip}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </Reveal>
+          </div>
+
+          <aside className="space-y-8">
+            <Reveal>
+              <div className="rounded-xl border border-ink-200 p-6">
+                <PriceScale
+                  price={vehicle.price}
+                  min={range.min}
+                  max={range.max}
+                  segment={vehicle.body}
+                />
+                <p className="mt-5 text-xs leading-relaxed text-ink-400">
+                  Comparação feita apenas entre os carros deste estoque — não é avaliação de
+                  mercado.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal>
+              <div className="rounded-xl border border-ink-200 p-6">
+                <h2 className="font-display text-base font-extrabold tracking-tight">
+                  Falar sobre este carro
+                </h2>
+                <p className="mb-5 mt-2 text-xs text-ink-400">
+                  Respondemos em horário comercial.
+                </p>
+                <ContactForm vehicle={vehicle} />
+              </div>
+            </Reveal>
+          </aside>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-2xl border border-ink-200 p-5">
-            <h1 className="text-xl font-bold leading-tight tracking-tight">
-              {vehicle.brand} {vehicle.model}
-            </h1>
-            <p className="mt-1 text-sm text-ink-500">{vehicle.version}</p>
-            <p className="tnum mt-1 text-sm text-ink-500">
-              {formatYear(vehicle.year, vehicle.modelYear)} • {formatKm(vehicle.mileage)}
-            </p>
-
-            <p className="tnum mt-4 text-3xl font-bold tracking-tight">
-              {formatPrice(vehicle.price)}
-            </p>
-            <p className="mt-1 text-sm text-ink-500">
-              📍 {vehicle.city} - {vehicle.state}
-            </p>
-
-            <a
-              href={whatsappLink(contactMessage)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 block rounded-lg bg-brand-500 py-3 text-center text-sm font-semibold text-white transition hover:bg-brand-600"
-            >
-              Tenho interesse
-            </a>
-
-            <div className="mt-5 border-t border-ink-100 pt-5">
-              <p className="text-sm font-semibold">Enviar mensagem</p>
-              <p className="mb-3 mt-1 text-xs text-ink-400">
-                Retornamos em horário comercial — {SITE.hours}
-              </p>
-              <ContactForm vehicle={vehicle} />
+        {related.length > 0 && (
+          <section className="border-t border-ink-100 py-14">
+            <h2 className="font-display text-2xl font-extrabold tracking-tight">
+              Parecidos com este
+            </h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((item, index) => (
+                <Reveal key={item.id} delay={index * 70}>
+                  <VehicleCard vehicle={item} />
+                </Reveal>
+              ))}
             </div>
-          </div>
-
-          <div className="mt-4 rounded-2xl border border-ink-200 p-5 text-sm">
-            <p className="font-semibold">{SITE.name}</p>
-            <p className="mt-1 text-ink-500">Loja em {SITE.city}</p>
-            <p className="mt-3 text-xs text-ink-400">
-              Anúncio publicado em{" "}
-              {new Date(vehicle.publishedAt).toLocaleDateString("pt-BR")}
-            </p>
-          </div>
-        </aside>
+          </section>
+        )}
       </div>
 
-      {related.length > 0 && (
-        <section className="mt-14">
-          <h2 className="text-xl font-bold tracking-tight">Veículos parecidos</h2>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((item) => (
-              <VehicleCard key={item.id} vehicle={item} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t border-ink-200 bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
+      {/* Barra fixa no mobile */}
+      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-4 border-t border-fumaca bg-asfalto px-4 py-3 lg:hidden">
         <div className="min-w-0">
-          <p className="truncate text-xs text-ink-500">{vehicle.model}</p>
-          <p className="tnum text-base font-bold leading-tight">{formatPrice(vehicle.price)}</p>
+          <p className="label truncate text-cromo/50">{vehicle.model}</p>
+          <p className="tnum font-display text-lg font-extrabold leading-tight text-white">
+            {formatPrice(vehicle.price)}
+          </p>
         </div>
         <a
           href={whatsappLink(contactMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto rounded-lg bg-brand-500 px-5 py-3 text-sm font-semibold text-white"
+          className="ml-auto rounded-md bg-brand-500 px-5 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-asfalto"
         >
           Tenho interesse
         </a>

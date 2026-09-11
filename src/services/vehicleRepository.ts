@@ -12,6 +12,8 @@ export interface VehicleRepository {
   getHighlighted(limit?: number): Vehicle[];
   getRelated(vehicle: Vehicle, limit?: number): Vehicle[];
   listBrands(): string[];
+  /** Faixa de preço de uma carroceria — alimenta a régua de preço do anúncio. */
+  priceRange(body: Vehicle["body"]): { min: number; max: number };
   all(): Vehicle[];
 }
 
@@ -39,6 +41,15 @@ export const vehicleRepository: VehicleRepository = {
       .slice(0, limit),
 
   listBrands: () => [...new Set(VEHICLES.map((vehicle) => vehicle.brand))].sort(),
+
+  priceRange: (body) => {
+    const prices = VEHICLES.filter((vehicle) => vehicle.body === body).map(
+      (vehicle) => vehicle.price,
+    );
+    return prices.length
+      ? { min: Math.min(...prices), max: Math.max(...prices) }
+      : { min: 0, max: 0 };
+  },
 
   all: () => VEHICLES,
 };

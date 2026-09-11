@@ -1,33 +1,41 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fff5ed;
-  --color-brand-100: #ffe6d2;
-  --color-brand-200: #ffc8a3;
-  --color-brand-300: #ffa26b;
-  --color-brand-400: #ff7a33;
-  --color-brand-500: #f2600b;
-  --color-brand-600: #d94e05;
-  --color-brand-700: #b33c09;
+  /* Showroom à noite */
+  --color-asfalto: #0d0f12;
+  --color-grafite: #191d23;
+  --color-fumaca: #262c34;
+  --color-cromo: #c9ced6;
+  --color-neblina: #f4f5f7;
 
-  --color-ink-900: #0b0e13;
-  --color-ink-800: #151a22;
-  --color-ink-700: #232a35;
-  --color-ink-500: #5b6675;
-  --color-ink-400: #8b95a4;
-  --color-ink-200: #dfe3e9;
-  --color-ink-100: #eef1f5;
-  --color-ink-50: #f7f8fa;
+  /* Farol — o laranja da marca, usado como luz */
+  --color-brand-50: #fff3ec;
+  --color-brand-100: #ffe0cd;
+  --color-brand-200: #ffbe98;
+  --color-brand-300: #ff9b62;
+  --color-brand-400: #ff7f38;
+  --color-brand-500: #ff6a1a;
+  --color-brand-600: #e0510a;
+  --color-brand-700: #b23e08;
+
+  --color-ink-900: #0d0f12;
+  --color-ink-800: #191d23;
+  --color-ink-700: #333a44;
+  --color-ink-500: #616b79;
+  --color-ink-400: #8f98a5;
+  --color-ink-200: #dde1e7;
+  --color-ink-100: #eceff3;
+  --color-ink-50: #f4f5f7;
+
+  --color-verde: #29b37a;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-inter), sans-serif;
+  --font-mono: var(--font-mono-code), ui-monospace, monospace;
 }
 
 :root {
   color-scheme: light;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
@@ -36,12 +44,120 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Numerais alinhados — preços, km e anos leem como instrumento de painel */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
 
+/* Etiqueta de dado: caixa alta, mono, tracking aberto */
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* O palco: poço de luz sobre o asfalto */
+.stage {
+  background:
+    radial-gradient(120% 70% at 50% 12%, rgba(255, 106, 26, 0.14), transparent 62%),
+    radial-gradient(80% 55% at 50% 78%, rgba(201, 206, 214, 0.16), transparent 70%),
+    linear-gradient(180deg, #0d0f12 0%, #14181d 55%, #0d0f12 100%);
+}
+
+.stage-card {
+  background:
+    radial-gradient(90% 60% at 50% 30%, rgba(255, 255, 255, 0.9), transparent 70%),
+    linear-gradient(180deg, #eef0f3 0%, #dfe3e9 100%);
+}
+
+/* Régua de odômetro — divisor e escala de preço */
+.ticks {
+  background-image: repeating-linear-gradient(
+    to right,
+    currentColor 0 1px,
+    transparent 1px 12px
+  );
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(320%) skewX(-18deg);
+  }
+}
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Brilho especular que atravessa a lataria uma vez, ao carregar */
+.sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  width: 45%;
+  animation: sweep 2.4s 0.5s cubic-bezier(0.4, 0, 0.2, 1) 1 both;
+  pointer-events: none;
+}
+
 *:focus-visible {
   outline: 2px solid var(--color-brand-500);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .sweep::after {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

@@ -6,7 +6,10 @@ import { slugify } from "@/lib/format";
  * Quando existir API real, este módulo é substituído pelo client HTTP
  * sem mudar a assinatura do repositório em `@/services/vehicleRepository`.
  */
-type VehicleSeed = Omit<Vehicle, "id" | "slug">;
+type VehicleSeed = Omit<
+  Vehicle,
+  "id" | "slug" | "power" | "sellerId" | "status" | "priceHistory"
+> & { power?: number; sellerId?: string; priceHistory?: Vehicle["priceHistory"] };
 
 const COLORS: Record<string, string> = {
   Branco: "#f1f2f4",
@@ -17,6 +20,10 @@ const COLORS: Record<string, string> = {
   Azul: "#1f4e8c",
   Vinho: "#5d1f2b",
 };
+
+const POWER_BY_MODEL: Record<string, number> = {"Onix": 116, "Agile": 106, "Polo": 128, "Corolla": 177, "Civic": 155, "HB20": 80, "Renegade": 185, "Argo": 77, "Toro": 180, "T-Cross": 128, "Ka": 85, "Duster": 120, "Kicks": 114, "Hilux": 204, "HR-V": 140, "Gol": 84};
+
+const SELLER_ROTATION = ["s1", "s1", "s3", "s3", "s2", "s4", "s7", "s6", "s1", "s3", "s1", "s5", "s3", "s1", "s2", "s4"];
 
 const seeds: VehicleSeed[] = [
   {
@@ -474,5 +481,13 @@ export const VEHICLES: Vehicle[] = seeds.map((seed, index) => {
   const slug = slugify(
     `${seed.brand} ${seed.model} ${seed.version} ${seed.year} ${id}`,
   );
-  return { ...seed, id, slug };
+  return {
+    ...seed,
+    id,
+    slug,
+    power: seed.power ?? POWER_BY_MODEL[seed.model] ?? 120,
+    sellerId: seed.sellerId ?? SELLER_ROTATION[index % SELLER_ROTATION.length],
+    status: "ativo" as const,
+    priceHistory: seed.priceHistory ?? [{ date: seed.publishedAt, price: seed.price }],
+  };
 });

@@ -144,9 +144,9 @@ export function VehicleBrowser() {
   const clearAll = () => router.replace("/carros", { scroll: false });
 
   const filterPanel = (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <label htmlFor="filtro-q" className="mb-1.5 block text-xs font-semibold text-ink-700">
+        <label htmlFor="filtro-q" className="label mb-2 block text-ink-400">
           Buscar
         </label>
         <input
@@ -154,23 +154,20 @@ export function VehicleBrowser() {
           defaultValue={query.q ?? ""}
           onChange={(event) => update("q", event.target.value)}
           placeholder="Marca, modelo ou versão"
-          className="h-11 w-full rounded-lg border border-ink-200 px-3 text-sm outline-none focus:border-ink-400"
+          className="h-11 w-full rounded-md border border-ink-200 px-3 text-sm outline-none transition focus:border-ink-900"
         />
       </div>
 
       {FIELDS.map((field) => (
         <div key={field.param}>
-          <label
-            htmlFor={`filtro-${field.param}`}
-            className="mb-1.5 block text-xs font-semibold text-ink-700"
-          >
+          <label htmlFor={`filtro-${field.param}`} className="label mb-2 block text-ink-400">
             {field.label}
           </label>
           <select
             id={`filtro-${field.param}`}
             value={String(query[field.param] ?? "")}
             onChange={(event) => update(field.param, event.target.value)}
-            className="h-11 w-full rounded-lg border border-ink-200 bg-white px-3 text-sm outline-none focus:border-ink-400"
+            className="h-11 w-full rounded-md border border-ink-200 bg-white px-3 text-sm outline-none transition focus:border-ink-900"
           >
             {field.options.map((option) => (
               <option key={option.value} value={option.value}>
@@ -185,7 +182,7 @@ export function VehicleBrowser() {
         <button
           type="button"
           onClick={clearAll}
-          className="w-full rounded-lg border border-ink-200 py-2.5 text-sm font-semibold text-ink-700 hover:bg-ink-50"
+          className="label w-full rounded-md border border-ink-200 py-3 text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
         >
           Limpar filtros ({activeCount})
         </button>
@@ -194,73 +191,95 @@ export function VehicleBrowser() {
   );
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Estoque</h1>
-
-      <div className="mt-6 grid gap-8 lg:grid-cols-[260px_1fr]">
-        <aside className="hidden lg:block">
-          <div className="sticky top-24 rounded-2xl border border-ink-200 p-4">{filterPanel}</div>
-        </aside>
-
-        <div>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-ink-500">
-              <strong className="tnum font-semibold text-ink-900">{results.length}</strong>{" "}
-              {results.length === 1 ? "veículo encontrado" : "veículos encontrados"}
-            </p>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setFiltersOpen(true)}
-                className="rounded-lg border border-ink-200 px-3 py-2 text-sm font-medium lg:hidden"
-              >
-                Filtros{activeCount > 0 ? ` (${activeCount})` : ""}
-              </button>
-
-              <label htmlFor="ordenar" className="sr-only">
-                Ordenar por
-              </label>
-              <select
-                id="ordenar"
-                value={query.sort ?? "relevancia"}
-                onChange={(event) => update("sort", event.target.value)}
-                className="h-10 rounded-lg border border-ink-200 bg-white px-3 text-sm outline-none focus:border-ink-400"
-              >
-                {Object.entries(SORT_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <>
+      <div className="stage border-b border-fumaca">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4 px-4 py-10 sm:px-6">
+          <div>
+            <p className="label text-brand-500">Estoque completo</p>
+            <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              {results.length}{" "}
+              {results.length === 1 ? "carro disponível" : "carros disponíveis"}
+            </h1>
           </div>
-
-          {results.length > 0 ? (
-            <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {results.map((vehicle) => (
-                <VehicleCard
-                  key={vehicle.id}
-                  vehicle={vehicle}
-                  averagePrice={averages.get(vehicle.body)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="mt-8 rounded-2xl border border-dashed border-ink-200 px-6 py-16 text-center">
-              <p className="text-base font-semibold">Não encontramos carros com esses filtros.</p>
-              <p className="mt-2 text-sm text-ink-500">
-                Tente ampliar a faixa de preço ou remover algum filtro.
-              </p>
-              <button
-                type="button"
-                onClick={clearAll}
-                className="mt-5 rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white"
-              >
-                Limpar filtros
-              </button>
-            </div>
+          {activeCount > 0 && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="label rounded-md border border-fumaca px-4 py-2.5 text-cromo transition hover:border-cromo hover:text-white"
+            >
+              Limpar {activeCount} {activeCount === 1 ? "filtro" : "filtros"}
+            </button>
           )}
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[250px_1fr]">
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">{filterPanel}</div>
+          </aside>
+
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-100 pb-4">
+              <p className="label text-ink-400">
+                {results.length} {results.length === 1 ? "resultado" : "resultados"}
+              </p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFiltersOpen(true)}
+                  className="label rounded-md border border-ink-200 px-4 py-2.5 lg:hidden"
+                >
+                  Filtros{activeCount > 0 ? ` (${activeCount})` : ""}
+                </button>
+
+                <label htmlFor="ordenar" className="sr-only">
+                  Ordenar por
+                </label>
+                <select
+                  id="ordenar"
+                  value={query.sort ?? "relevancia"}
+                  onChange={(event) => update("sort", event.target.value)}
+                  className="h-10 rounded-md border border-ink-200 bg-white px-3 text-sm outline-none transition focus:border-ink-900"
+                >
+                  {Object.entries(SORT_LABELS).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {results.length > 0 ? (
+              <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {results.map((vehicle) => (
+                  <VehicleCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    averagePrice={averages.get(vehicle.body)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-10 rounded-xl border border-dashed border-ink-200 px-6 py-20 text-center">
+                <p className="font-display text-xl font-extrabold tracking-tight">
+                  Nenhum carro com esses filtros
+                </p>
+                <p className="mx-auto mt-3 max-w-sm text-sm text-ink-500">
+                  Tente ampliar a faixa de preço, o ano ou a quilometragem.
+                </p>
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="mt-7 rounded-md bg-asfalto px-6 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-white transition hover:bg-grafite"
+                >
+                  Limpar filtros
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -270,15 +289,15 @@ export function VehicleBrowser() {
             type="button"
             aria-label="Fechar filtros"
             onClick={() => setFiltersOpen(false)}
-            className="absolute inset-0 bg-ink-900/40"
+            className="absolute inset-0 bg-asfalto/60 backdrop-blur-sm"
           />
-          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-base font-semibold">Filtros</p>
+          <div className="absolute inset-x-0 bottom-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-white p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <p className="font-display text-lg font-extrabold tracking-tight">Filtros</p>
               <button
                 type="button"
                 onClick={() => setFiltersOpen(false)}
-                className="rounded-lg px-3 py-1.5 text-sm text-ink-500"
+                className="label text-ink-400"
               >
                 Fechar
               </button>
@@ -287,13 +306,13 @@ export function VehicleBrowser() {
             <button
               type="button"
               onClick={() => setFiltersOpen(false)}
-              className="mt-5 w-full rounded-lg bg-brand-500 py-3 text-sm font-semibold text-white"
+              className="mt-6 w-full rounded-md bg-brand-500 py-4 font-display text-sm font-bold uppercase tracking-wider text-asfalto"
             >
-              Ver {results.length} {results.length === 1 ? "veículo" : "veículos"}
+              Ver {results.length} {results.length === 1 ? "carro" : "carros"}
             </button>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
