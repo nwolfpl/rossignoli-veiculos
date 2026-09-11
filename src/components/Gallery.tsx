@@ -73,7 +73,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
       </div>
 
       {total > 1 && (
-        <div className="mt-3 grid grid-cols-4 gap-3">
+        <div className="mt-3 flex gap-3">
           {Array.from({ length: total }, (_, slide) => (
             <button
               key={slide}
@@ -81,7 +81,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
               onClick={() => setIndex(slide)}
               aria-label={`Ver imagem ${slide + 1}`}
               aria-current={slide === index}
-              className={`overflow-hidden rounded-lg border transition ${
+              className={`w-[23%] max-w-[150px] overflow-hidden rounded-lg border transition ${
                 slide === index
                   ? "border-brand-500"
                   : "border-fumaca opacity-60 hover:opacity-100"
