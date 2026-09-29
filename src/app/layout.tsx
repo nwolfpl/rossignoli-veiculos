@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -50,9 +48,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} ${archivo.variable} ${mono.variable}`}>
       <body className="flex min-h-screen flex-col bg-white font-sans antialiased">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { VehicleCard } from "@/components/VehicleCard";
 import { SORT_LABELS, type SortKey, type VehicleQuery } from "@/domain/types";
 import { averagePriceByBody } from "@/lib/filters";
+import { track } from "@/services/analyticsClient";
 import { vehicleRepository } from "@/services/vehicleRepository";
 
 type FieldOption = { value: string; label: string };
@@ -134,14 +135,40 @@ export function VehicleBrowser() {
 
   const activeCount = Object.keys(query).filter((key) => key !== "sort").length;
 
+  const lastTracked = useRef<string>("");
+  useEffect(() => {
+    const snapshot = JSON.stringify(query);
+    if (snapshot === lastTracked.current) return;
+    // Chegar no /carros sem filtro nenhum é só a página abrindo, não uma busca.
+    if (activeCount === 0 && !query.sort && lastTracked.current === "") {
+      lastTracked.current = snapshot;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      lastTracked.current = snapshot;
+      track("filtro", {
+        valor: results.length,
+        detalhes: { ...query, resultados: results.length, filtros_ativos: activeCount },
+      });
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [query, results.length, activeCount]);
+
   const update = (param: string, value: string) => {
+    if (param === "sort") {
+      track("ordenacao", { detalhes: { criterio: value || "relevancia" } });
+    }
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set(param, value);
     else params.delete(param);
     router.replace(`/carros${params.size ? `?${params}` : ""}`, { scroll: false });
   };
 
-  const clearAll = () => router.replace("/carros", { scroll: false });
+  const clearAll = () => {
+    track("filtros_limpos", { detalhes: { filtros_ativos: activeCount } });
+    router.replace("/carros", { scroll: false });
+  };
 
   const filterPanel = (
     <div className="space-y-5">

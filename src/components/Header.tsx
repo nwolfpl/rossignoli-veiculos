@@ -47,6 +47,7 @@ export function Header() {
             href={whatsappLink(`Olá! Vim pelo site da ${SITE.name}.`)}
             target="_blank"
             rel="noopener noreferrer"
+            data-track-origem="topo do site"
             className="rounded-md bg-brand-500 px-4 py-2 text-sm font-semibold text-asfalto transition hover:bg-brand-400"
           >
             WhatsApp

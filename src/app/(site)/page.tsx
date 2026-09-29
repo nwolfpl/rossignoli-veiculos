@@ -209,6 +209,8 @@ export default function HomePage() {
                 <Reveal key={category.body} delay={index * 70}>
                   <Link
                     href={`/carros?body=${encodeURIComponent(category.body)}`}
+                    data-track-evento="categoria_clique"
+                    data-track-origem={category.body}
                     className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-asfalto p-5 transition hover:-translate-y-1 hover:shadow-[0_24px_60px_-30px_rgba(13,15,18,0.8)]"
                   >
                     <div>

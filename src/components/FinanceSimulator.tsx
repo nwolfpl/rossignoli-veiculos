@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DEFAULT_DOWN_RATE,
   DEFAULT_TERM,
@@ -10,6 +10,7 @@ import {
 } from "@/lib/finance";
 import { formatPrice } from "@/lib/format";
 import { SITE, whatsappLink } from "@/lib/site";
+import { track } from "@/services/analyticsClient";
 
 export function FinanceSimulator({
   price,
@@ -24,6 +25,31 @@ export function FinanceSimulator({
 
   const result = simulate(price, down, months, rate / 100);
   const downPercent = Math.round((down / price) * 100);
+
+  // Só registra quando os valores saem do padrão: comparar com o estado inicial
+  // é mais confiável que uma trava de "primeiro render", que o React dispara
+  // duas vezes em desenvolvimento.
+  const inicial = useRef({ down, months, rate });
+  useEffect(() => {
+    const base = inicial.current;
+    if (down === base.down && months === base.months && rate === base.rate) return;
+
+    const timer = setTimeout(() => {
+      track("simulador_ajustou", {
+        valor: result.installment,
+        detalhes: {
+          veiculo: vehicleTitle,
+          preco: price,
+          entrada: down,
+          entrada_percentual: downPercent,
+          parcelas: months,
+          taxa_mensal: rate,
+          parcela: result.installment,
+        },
+      });
+    }, 900);
+    return () => clearTimeout(timer);
+  }, [down, months, rate, price, downPercent, result.installment, vehicleTitle]);
 
   return (
     <div className="rounded-xl border border-ink-200 bg-white p-6">
@@ -123,6 +149,7 @@ export function FinanceSimulator({
         )}
         target="_blank"
         rel="noopener noreferrer"
+        data-track-origem="simulador de parcela"
         className="mt-4 block rounded-md border border-ink-900 py-3 text-center font-display text-sm font-bold uppercase tracking-wider transition hover:bg-ink-900 hover:text-white"
       >
         Fazer proposta real

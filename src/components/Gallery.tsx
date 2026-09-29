@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { VehicleMedia, slideCount } from "@/components/VehiclePhoto";
 import { creditsFor } from "@/data/photos";
 import type { Vehicle } from "@/domain/types";
+import { track } from "@/services/analyticsClient";
 
 export function Gallery({ vehicle }: { vehicle: Vehicle }) {
   const total = slideCount(vehicle);
@@ -13,9 +14,24 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
   const [zoomed, setZoomed] = useState(false);
   const credit = credits[index];
 
+  const vehicleRef = {
+    id: vehicle.id,
+    slug: vehicle.slug,
+    titulo: `${vehicle.brand} ${vehicle.model} ${vehicle.version}`,
+  };
+
+  // O registro fica fora do updater de estado: o React pode chamar o updater duas
+  // vezes em desenvolvimento, e isso duplicaria o evento.
   const move = useCallback(
-    (delta: number) => setIndex((current) => (current + delta + total) % total),
-    [total],
+    (delta: number) => {
+      const next = (index + delta + total) % total;
+      setIndex(next);
+      track("galeria_navegou", {
+        valor: next + 1,
+        detalhes: { de: index + 1, para: next + 1, origem: "seta" },
+      });
+    },
+    [index, total],
   );
 
   useEffect(() => {
@@ -33,7 +49,10 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
       <div className="relative overflow-hidden rounded-xl border border-fumaca bg-asfalto">
         <button
           type="button"
-          onClick={() => setZoomed(true)}
+          onClick={() => {
+            setZoomed(true);
+            track("galeria_abriu", { vehicle: vehicleRef, valor: index + 1 });
+          }}
           className="block w-full cursor-zoom-in"
           aria-label="Ampliar imagem"
         >
@@ -78,7 +97,10 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
             <button
               key={slide}
               type="button"
-              onClick={() => setIndex(slide)}
+              onClick={() => {
+                setIndex(slide);
+                track("galeria_navegou", { valor: slide + 1, detalhes: { origem: "miniatura" } });
+              }}
               aria-label={`Ver imagem ${slide + 1}`}
               aria-current={slide === index}
               className={`w-[23%] max-w-[150px] overflow-hidden rounded-lg border transition ${

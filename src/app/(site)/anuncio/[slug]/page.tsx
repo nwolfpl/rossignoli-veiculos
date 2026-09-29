@@ -6,6 +6,7 @@ import { Gallery } from "@/components/Gallery";
 import { FinanceSimulator } from "@/components/FinanceSimulator";
 import { PriceScale } from "@/components/PriceScale";
 import { Reveal } from "@/components/Reveal";
+import { TrackVehicleView } from "@/components/TrackVehicleView";
 import { VehicleCard } from "@/components/VehicleCard";
 import { DEFAULT_TERM, EXAMPLE_MONTHLY_RATE, showcaseInstallment } from "@/lib/finance";
 import { formatKm, formatPrice, formatYear } from "@/lib/format";
@@ -64,6 +65,7 @@ export default async function AnuncioPage({ params }: Params) {
 
   return (
     <div className="pb-24 lg:pb-0">
+      <TrackVehicleView vehicle={vehicle} />
       {/* Palco do anúncio */}
       <section className="stage border-b border-fumaca">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
@@ -125,6 +127,7 @@ export default async function AnuncioPage({ params }: Params) {
                   href={whatsappLink(contactMessage)}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-track-origem="botão do anúncio"
                   className="mt-6 block rounded-md bg-brand-500 py-4 text-center font-display text-sm font-bold uppercase tracking-wider text-asfalto transition hover:bg-brand-400"
                 >
                   Tenho interesse
@@ -283,6 +286,7 @@ export default async function AnuncioPage({ params }: Params) {
           href={whatsappLink(contactMessage)}
           target="_blank"
           rel="noopener noreferrer"
+          data-track-origem="barra fixa do mobile"
           className="ml-auto rounded-md bg-brand-500 px-5 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-asfalto"
         >
           Tenho interesse

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { track } from "@/services/analyticsClient";
 
 const PRICE_OPTIONS = [
   { value: "", label: "Qualquer valor" },
@@ -27,6 +28,16 @@ export function SearchBox({ brands }: { brands: string[] }) {
     if (term.trim()) params.set("q", term.trim());
     if (brand) params.set("brand", brand);
     if (maxPrice) params.set("maxPrice", maxPrice);
+
+    track("busca", {
+      detalhes: {
+        termo: term.trim() || null,
+        marca: brand || null,
+        preco_maximo: maxPrice ? Number(maxPrice) : null,
+        origem: "console do hero",
+      },
+    });
+
     router.push(`/carros${params.size ? `?${params}` : ""}`);
   };
 
