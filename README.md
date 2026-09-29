@@ -31,6 +31,8 @@ Abra http://localhost:3000. Para gerar a versão de produção: `npm run build &
 - **Simulação de parcela** — cada card mostra a parcela estimada (48x com 30% de
   entrada) e o anúncio traz um simulador com entrada, prazo e taxa ajustáveis,
   sempre marcado como cálculo ilustrativo.
+- **Rastreamento e painel (`/admin`)** — cada visita é registrada no Supabase e lida
+  em uma área restrita ao administrador. Detalhes abaixo.
 - **Estados de vazio e 404** — busca sem resultado oferece limpar os filtros.
 - **Acessibilidade** — foco visível, navegação por teclado na galeria, alt nas
   ilustrações e contraste conferido nas faixas escuras.
@@ -87,17 +89,84 @@ Para usar fotos próprias, coloque os arquivos em `public/fotos/` e ajuste o map
 Quando um anúncio não tem foto nenhuma, o componente `VehicleMedia` cai numa ilustração
 vetorial gerada a partir da carroceria e da cor — o site nunca fica com espaço vazio.
 
+## Rastreamento do comportamento e painel do administrador
+
+O site continua estático, mas agora fala com um backend: o navegador do visitante
+grava os eventos direto no Supabase, e a área `/admin` os lê depois do login.
+
+### O que é registrado
+
+Entrada no site (origem, UTM, aparelho, navegador, sistema), página vista,
+profundidade de rolagem, tempo na página, busca digitada, combinação de filtros
+**com a contagem de resultados**, anúncio aberto com a ficha do carro, uso da
+galeria, ajustes no simulador de parcela, clique no WhatsApp (com o botão de
+origem) e envio do formulário de interesse.
+
+O visitante é identificado por um código aleatório guardado no navegador —
+nenhum dado pessoal —, exceto no formulário, onde ele mesmo informa nome e
+telefone.
+
+### Como a segurança funciona
+
+A chave do Supabase que viaja no site é **publishable**: ela é pública por
+natureza, e não há segredo a proteger ali. Quem protege os dados é o Row Level
+Security do banco:
+
+| Operação | Visitante (chave pública) | Administrador (logado) |
+| --- | --- | --- |
+| Inserir evento, sessão e lead | sim | sim |
+| Ler qualquer coisa | **não** | sim |
+| Alterar | **não** | não |
+| Apagar | **não** | sim |
+
+Não há política de `UPDATE` para ninguém: a trilha é imutável, que é o ponto de
+ter rastreabilidade. Mexer no JavaScript do navegador não contorna nada disso,
+porque a decisão é tomada no banco.
+
+### Entrar no painel
+
+Em `/admin`, usuário `gustavo` e a senha da conta que já existe no Supabase
+(`gustavo@rossignolilocacoes.com.br`). O apelido é atalho de digitação, não de
+segurança. Para trocar quem tem acesso, edite a função `public.rv_e_admin()` no
+banco — a lista não vive no código do site.
+
+### Configuração
+
+```bash
+cp .env.example .env.local
+```
+
+Sem essas variáveis o site funciona normalmente, apenas sem registrar nada, e o
+painel avisa que não está configurado.
+
+### Nota de LGPD — pendência aberta
+
+Por decisão de projeto **não há banner de consentimento**, e o formulário de
+interesse guarda nome, telefone e mensagem. Isso é dado pessoal sob a LGPD. O
+que ainda falta para ficar em conformidade:
+
+- aviso de privacidade dizendo o que é coletado, para quê e por quanto tempo;
+- um caminho para o titular pedir acesso ou exclusão dos dados;
+- prazo de descarte dos eventos antigos (hoje eles ficam indefinidamente).
+
+Os eventos de navegação em si são anônimos; a exposição está concentrada nos
+contatos do formulário, na tabela `rv_leads`.
+
 ## Arquitetura
 Next.js 16 (App Router) + TypeScript + Tailwind CSS v4.
 
 ```
 src/
-  app/                 rotas (home, /carros, /anuncio/[slug], 404)
+  app/
+    (site)/            vitrine: home, /carros, /anuncio/[slug] — com header, rodapé e rastreamento
+    admin/             painel do administrador, fora da moldura da loja
   components/          UI reutilizável (card, galeria, filtros, header, footer…)
+    admin/             painel: login, gráficos, linha do tempo das visitas
   data/vehicles.ts     estoque fictício (16 veículos)
   domain/types.ts      tipos do domínio (Vehicle, VehicleQuery, ordenação)
-  lib/                 funções puras: formatação, filtros, config da loja
-  services/            repositório de veículos (contrato + implementação mock)
+  domain/analytics.ts  vocabulário dos eventos rastreados
+  lib/                 funções puras: formatação, filtros, config, agregações do painel
+  services/            repositórios: veículos, escrita do rastreamento, leitura do painel
 ```
 
 Decisões que importam para a evolução:
@@ -149,13 +218,14 @@ Nas próximas vezes o worktree já existe: basta copiar, commitar e dar push.
 
 - Favoritos e comparação de veículos
 - Área do vendedor: publicar anúncio e acompanhar visualizações/contatos
-- Registro real dos leads do formulário (hoje o envio é simulado)
-- Backend + painel de administração do estoque
+- Backend + painel de administração do estoque (o painel de hoje só lê, não edita)
 
 ## Limitações do protótipo
 
-- Não há backend, banco de dados nem autenticação.
-- O formulário de interesse não envia nada; o canal real é o link do WhatsApp.
+- O estoque ainda é um array em memória: não há administração de anúncios, só
+  leitura do comportamento dos visitantes.
+- O formulário de interesse grava o contato, mas não dispara aviso nenhum — é
+  preciso abrir o painel para ver que chegou.
 - As imagens são ilustrações vetoriais, não fotos dos veículos.
 - Os selos ("Preço abaixo da média", "Baixa quilometragem") são calculados apenas
   sobre os 16 veículos fictícios do próprio protótipo — não há análise de mercado real.
