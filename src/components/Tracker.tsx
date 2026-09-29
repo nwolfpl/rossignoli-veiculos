@@ -67,15 +67,30 @@ function TrackerInner() {
 
   // Rolagem, tempo na página e saída.
   useEffect(() => {
+    /*
+     * Antes do layout, innerHeight pode ser 0 e a altura rolável sair zero ou
+     * negativa. Tratar isso como "leu tudo" marcaria 100% no carregamento e
+     * estragaria a métrica — por isso a resposta aqui é "ainda não dá para dizer".
+     */
+    const depth = () => {
+      const height = window.innerHeight;
+      const scrollable = document.documentElement.scrollHeight - height;
+      if (!height || scrollable <= 0) return null;
+      return Math.min(100, Math.max(0, Math.round((window.scrollY / scrollable) * 100)));
+    };
+
+    /** Página que cabe inteira na tela é vista por completo — mas só depois de existir. */
+    const fitsScreen = () =>
+      window.innerHeight > 0 &&
+      document.documentElement.scrollHeight <= window.innerHeight + 8;
+
     const onScroll = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      const percent =
-        scrollable <= 0 ? 100 : Math.round((window.scrollY / scrollable) * 100);
-      const depth = Math.min(100, Math.max(0, percent));
-      maxScroll.current = Math.max(maxScroll.current, depth);
+      const current = depth();
+      if (current === null) return;
+      maxScroll.current = Math.max(maxScroll.current, current);
 
       for (const mark of SCROLL_MARKS) {
-        if (depth >= mark && !reached.current.has(mark)) {
+        if (current >= mark && !reached.current.has(mark)) {
           reached.current.add(mark);
           track("rolagem", { valor: mark });
         }
@@ -93,7 +108,10 @@ function TrackerInner() {
     const onLeave = () => {
       track("saida_pagina", {
         valor: Math.round((Date.now() - enteredAt.current) / 1000),
-        detalhes: { rolagem_maxima: maxScroll.current },
+        detalhes: {
+          rolagem_maxima:
+            maxScroll.current === 0 && fitsScreen() ? 100 : maxScroll.current,
+        },
       });
       flush(true);
     };
@@ -105,10 +123,14 @@ function TrackerInner() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pagehide", onLeave);
     document.addEventListener("visibilitychange", onVisibility);
-    onScroll();
+    // Depois do load a altura já é confiável.
+    window.addEventListener("load", onScroll);
+    const settle = setTimeout(onScroll, 1200);
 
     return () => {
       clearInterval(pulse);
+      clearTimeout(settle);
+      window.removeEventListener("load", onScroll);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pagehide", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
